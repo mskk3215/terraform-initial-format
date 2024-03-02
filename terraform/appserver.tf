@@ -37,7 +37,7 @@ resource "aws_ssm_parameter" "username" {
 resource "aws_ssm_parameter" "password" {
   name  = "/${var.project}/${var.environment}/app/MYSQL_PASSWORD"
   type  = "SecureString"
-  value = aws_db_instance.mysql_standalone.password
+  value = random_string.db_password.result
 }
 # ----------------------
 # EC2 instance
