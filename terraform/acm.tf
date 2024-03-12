@@ -28,10 +28,10 @@ resource "aws_route53_record" "route53_acm_dns_resolve" {
   }
   allow_overwrite = true
   zone_id         = aws_route53_zone.route53_zone.id
-  name            = each.value.name
-  type            = each.value.type
-  ttl             = 600
-  records         = [each.value.record]
+  name            = each.value.name     # レコード名
+  type            = each.value.type     # レコードタイプ
+  ttl             = 600                 # キャッシュの有効期限
+  records         = [each.value.record] # 転送先DNS名
 }
 
 # SSL/TLS証明書検証

@@ -47,7 +47,7 @@ resource "aws_ssm_parameter" "password" {
 #   instance_type               = "t2.micro"
 #   subnet_id                   = aws_subnet.public_subnet_1a.id
 #   associate_public_ip_address = true
-#   iam_instance_profile        = aws_iam_instance_profile.app_ec2_profile.name
+#   iam_instance_profile        = aws_iam_instance_profile.app_ec2_profile.name # IAM
 #   vpc_security_group_ids = [aws_security_group.app_sg.id, aws_security_group.opmng_sg.id
 #   ]
 #   key_name = aws_key_pair.keypair.key_name

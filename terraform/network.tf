@@ -20,8 +20,7 @@ resource "aws_subnet" "public_subnet_1a" {
   vpc_id                  = aws_vpc.vpc.id
   availability_zone       = "ap-northeast-1a"
   cidr_block              = "192.168.1.0/24"
-  map_public_ip_on_launch = true
-
+  map_public_ip_on_launch = true  #自動割り当てIP設定
   tags = {
     Name    = "${var.project}-${var.environment}-public-subnet-1a"
     Project = var.project
@@ -34,7 +33,6 @@ resource "aws_subnet" "public_subnet_1c" {
   availability_zone       = "ap-northeast-1c"
   cidr_block              = "192.168.2.0/24"
   map_public_ip_on_launch = true
-
   tags = {
     Name    = "${var.project}-${var.environment}-public-subnet-1c"
     Project = var.project
@@ -47,7 +45,6 @@ resource "aws_subnet" "private_subnet_1a" {
   availability_zone       = "ap-northeast-1a"
   cidr_block              = "192.168.3.0/24"
   map_public_ip_on_launch = false
-
   tags = {
     Name    = "${var.project}-${var.environment}-private-subnet-1a"
     Project = var.project
@@ -60,7 +57,6 @@ resource "aws_subnet" "private_subnet_1c" {
   availability_zone       = "ap-northeast-1c"
   cidr_block              = "192.168.4.0/24"
   map_public_ip_on_launch = false
-
   tags = {
     Name    = "${var.project}-${var.environment}-private-subnet-1c"
     Project = var.project
@@ -81,6 +77,7 @@ resource "aws_route_table" "public_rt" {
     Type    = "public"
   }
 }
+
 resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.vpc.id
   tags = {
@@ -90,7 +87,7 @@ resource "aws_route_table" "private_rt" {
     Type    = "private"
   }
 }
-
+# route table association(VPCとサブネットを関連付ける)
 resource "aws_route_table_association" "public_rt_1a" {
   route_table_id = aws_route_table.public_rt.id
   subnet_id      = aws_subnet.public_subnet_1a.id
@@ -99,6 +96,7 @@ resource "aws_route_table_association" "public_rt_1c" {
   route_table_id = aws_route_table.public_rt.id
   subnet_id      = aws_subnet.public_subnet_1c.id
 }
+
 resource "aws_route_table_association" "private_rt_1a" {
   route_table_id = aws_route_table.private_rt.id
   subnet_id      = aws_subnet.private_subnet_1a.id
@@ -110,6 +108,7 @@ resource "aws_route_table_association" "private_rt_1c" {
 # ----------------------
 # Internet Gateway
 # ----------------------
+# Internet Gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
   tags = {
@@ -118,6 +117,7 @@ resource "aws_internet_gateway" "igw" {
     Env     = var.environment
   }
 }
+# route
 resource "aws_route" "public_rt_igw_r" {
   route_table_id         = aws_route_table.public_rt.id
   destination_cidr_block = "0.0.0.0/0"

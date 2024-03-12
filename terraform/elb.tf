@@ -1,9 +1,10 @@
 # ----------------------
 # ALB
 # ----------------------
+# ロードバランサー
 resource "aws_lb" "alb" {
   name               = "${var.project}-${var.environment}-app-alb"
-  internal           = false
+  internal           = false  #内部むけかどうか
   load_balancer_type = "application"
   security_groups    = [aws_security_group.web_sg.id]
   subnets = [
@@ -12,7 +13,7 @@ resource "aws_lb" "alb" {
   ]
 }
 
-# listenr 
+# リスナー 
 resource "aws_lb_listener" "alb_listener_http" {
   load_balancer_arn = aws_lb.alb.arn
   port              = 80
@@ -29,14 +30,13 @@ resource "aws_lb_listener" "alb_listener_https" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = aws_acm_certificate.tokyo_cert.arn
+  certificate_arn   = aws_acm_certificate.tokyo_cert.arn # 証明書のARN
 
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.alb_target_group.arn
   }
 }
-
 
 # ----------------------
 # target group

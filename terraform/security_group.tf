@@ -13,9 +13,10 @@ resource "aws_security_group" "web_sg" {
     Env     = var.environment
   }
 }
+# web security group rule
 resource "aws_security_group_rule" "web_in_http" {
   security_group_id = aws_security_group.web_sg.id
-  type              = "ingress"
+  type              = "ingress" # ingress: インバウンド, egress: アウトバウンド
   protocol          = "tcp"
   from_port         = 80
   to_port           = 80
@@ -38,6 +39,7 @@ resource "aws_security_group_rule" "web_out_tcp3000" {
   source_security_group_id = aws_security_group.app_sg.id
 }
 
+
 # app security group
 resource "aws_security_group" "app_sg" {
   name        = "${var.project}-${var.environment}-app-sg"
@@ -49,6 +51,7 @@ resource "aws_security_group" "app_sg" {
     Env     = var.environment
   }
 }
+# app security group rule
 resource "aws_security_group_rule" "app_in_tcp3000" {
   security_group_id        = aws_security_group.app_sg.id
   type                     = "ingress"
@@ -82,6 +85,7 @@ resource "aws_security_group_rule" "app_out_tcp3306" {
   source_security_group_id = aws_security_group.db_sg.id
 }
 
+
 # opmng security group
 resource "aws_security_group" "opmng_sg" {
   name        = "${var.project}-${var.environment}-opmng-sg"
@@ -93,6 +97,7 @@ resource "aws_security_group" "opmng_sg" {
     Env     = var.environment
   }
 }
+# opmng security group rule
 resource "aws_security_group_rule" "opmng_in_ssh" {
   security_group_id = aws_security_group.opmng_sg.id
   type              = "ingress"
@@ -126,6 +131,7 @@ resource "aws_security_group_rule" "opmng_out_https" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+
 # db security group
 resource "aws_security_group" "db_sg" {
   name        = "${var.project}-${var.environment}-db-sg"
@@ -137,6 +143,7 @@ resource "aws_security_group" "db_sg" {
     Env     = var.environment
   }
 }
+# db security group rule
 resource "aws_security_group_rule" "db_in_tcp3306" {
   security_group_id        = aws_security_group.db_sg.id
   type                     = "ingress"

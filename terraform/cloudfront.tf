@@ -3,8 +3,8 @@
 # ----------------------
 # CloudFront
 resource "aws_cloudfront_distribution" "cf" {
-  enabled         = true
-  is_ipv6_enabled = true
+  enabled         = true # 有効かどうか
+  is_ipv6_enabled = true # IPv6を有効にするかどうか
   comment         = "cache distribution"
   price_class     = "PriceClass_All"
   # オリジン
@@ -13,7 +13,7 @@ resource "aws_cloudfront_distribution" "cf" {
     domain_name = aws_route53_record.route53_record.fqdn
     origin_id   = aws_lb.alb.name
     custom_origin_config {
-      origin_protocol_policy = "match-viewer"
+      origin_protocol_policy = "match-viewer" # プロトコルポリシー
       origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
       http_port              = 80
       https_port             = 443
@@ -50,7 +50,7 @@ resource "aws_cloudfront_distribution" "cf" {
     path_pattern     = "/public/"
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = aws_s3_bucket.s3_static_bucket.id
+    target_origin_id = aws_s3_bucket.s3_static_bucket.id #転送先のオリジンID
     forwarded_values {
       query_string = false
       cookies {
@@ -61,7 +61,7 @@ resource "aws_cloudfront_distribution" "cf" {
     min_ttl                = 0
     default_ttl            = 86400
     max_ttl                = 31536000
-    compress               = true
+    compress               = true # 圧縮するかどうか
   }
   # アクセス制限
   restrictions {
@@ -72,13 +72,13 @@ resource "aws_cloudfront_distribution" "cf" {
   aliases = ["dev.${var.domain}"]
   # 証明書
   viewer_certificate {
-    acm_certificate_arn      = aws_acm_certificate.virginia_cert.arn
+    acm_certificate_arn      = aws_acm_certificate.virginia_cert.arn  # ACM証明書のARN
     minimum_protocol_version = "TLSv1.2_2019"
     ssl_support_method       = "sni-only"
   }
 }
 
-# s3へアクセスする為のアイデンティティ
+# s3へアクセスする為のオリジンアクセスアイデンティティ
 resource "aws_cloudfront_origin_access_identity" "cf_s3_origin_access_identity" {
   comment = "s3 static bucket access identity"
 }
